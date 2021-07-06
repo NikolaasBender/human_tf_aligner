@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 import os
+import time
 
 def lid_pre_process(xyz):
     o =  0 
@@ -61,15 +62,35 @@ index = 0
 img = images[index]
 pc = leftlid[index]
 
+lidar_points = []
 
 
-def call(pc, t_x, t_y, t_z, r, p, ya, im):
+def call(t_x, t_y, t_z, r, p, ya):
+    # print(pc.shape)
     tvec = np.array([[float(t_x)], [float(t_y)], [float(t_z)]])
     rvec = np.array([[float(r)], [float(p)], [float(ya)]])
     lidar_pic = lidar2cam(pc, rvec, tvec, intrinsics)
-    print(len(lidar_pic[:,1]), len(lidar_pic[:,0]))
+    print(lidar_pic[:,1].squeeze().shape, lidar_pic[:,0].squeeze().shape)
+    # lid_small = np.delete(lidar_pic, 2, 1)
+    print(lidar_pic.shape)
+    # return lidar_pic
+    # lidar_points = lidar_pic
+    # print(lidar_points.shape)
+    # return [lidar_pic[:,1], lidar_pic[:,0]]
+    return lidar_pic[:,1]
 
-    return [lidar_pic[:,1], lidar_pic[:,0]]
+def call_y(x, t_x, t_y, t_z, r, p, ya):
+    # print(pc.shape)
+    tvec = np.array([[float(t_x)], [float(t_y)], [float(t_z)]])
+    rvec = np.array([[float(r)], [float(p)], [float(ya)]])
+    lidar_pic = lidar2cam(pc, rvec, tvec, intrinsics)
+    print(lidar_pic[:,1].squeeze().shape, lidar_pic[:,0].squeeze().shape)
+    # lid_small = np.delete(lidar_pic, 2, 1)
+    print(lidar_pic.shape)
+    # return lidar_pic
+    # lidar_points = lidar_pic
+    # print(lidar_points.shape)
+    return lidar_pic[:,0]
 
 
 
@@ -77,8 +98,9 @@ def call(pc, t_x, t_y, t_z, r, p, ya, im):
 fig, ax = plt.subplots()
 # ax.imshow(img)
 # plt.scatter(lidar_picure[:,1], lidar_picure[:,0],s=1)
+# plt.scatter(call(0, 0, 0, 0, 0, 0))
 
-controls = iplt.imshow(pc, call, t_x=X, t_y=Y, t_z=Z, r=Roll, p=Pitch, ya=Yaw, im=img)
+iplt.scatter(call, call_y, t_x=(-1, 1), t_y=(-1, 1), t_z=(0, 4), r=(-2, 2), p=(-2, 2), ya=(-2, 2))
 # iplt.scatter(x, f2, controls=controls, label="f2")
 
 # plt.show()
