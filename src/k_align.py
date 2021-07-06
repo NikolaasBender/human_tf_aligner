@@ -52,6 +52,7 @@ Roll = np.linspace(0, 100)
 Pitch = np.linspace(0, 100)
 Yaw = np.linspace(0, 100)
 
+
 tvec = np.array((3, 1))
 rvec = np.array((3, 1))
 
@@ -60,28 +61,24 @@ index = 0
 img = images[index]
 pc = leftlid[index]
 
-def call_x(t_x, t_y, t_z, r, p, ya):
-    tvec = np.array([[float(t_x)], [float(t_y)], [float(t_z)]])
-    rvec = np.array([[float(r)], [float(p)], [float(ya)]])
-    lidar_pic = lidar2cam(pc, rvec, tvec, intrinsics)
-    print(len(lidar_pic[:,1]), len(lidar_pic[:,0]))
-    return lidar_pic[:,1]#, lidar_pic[:,0]]
 
-def call_y(t_x, t_y, t_z, r, p, ya):
+
+def call(pc, t_x, t_y, t_z, r, p, ya, im):
     tvec = np.array([[float(t_x)], [float(t_y)], [float(t_z)]])
     rvec = np.array([[float(r)], [float(p)], [float(ya)]])
     lidar_pic = lidar2cam(pc, rvec, tvec, intrinsics)
     print(len(lidar_pic[:,1]), len(lidar_pic[:,0]))
-    return lidar_pic[:,0]
+
+    return [lidar_pic[:,1], lidar_pic[:,0]]
 
 
 
 # lidar_pic = lidar2cam(pc, rvec, tvec, intrinsics)
 fig, ax = plt.subplots()
-ax.imshow(img)
+# ax.imshow(img)
 # plt.scatter(lidar_picure[:,1], lidar_picure[:,0],s=1)
 
-controls = iplt.scatter(call_x, call_y, t_x=X, t_y=Y, t_z=Z, r=Roll, p=Pitch, ya=Yaw)
+controls = iplt.imshow(pc, call, t_x=X, t_y=Y, t_z=Z, r=Roll, p=Pitch, ya=Yaw, im=img)
 # iplt.scatter(x, f2, controls=controls, label="f2")
 
 # plt.show()
